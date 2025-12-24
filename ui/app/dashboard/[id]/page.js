@@ -180,6 +180,12 @@ function AddWidgetForm({ onSubmit, onCancel, initialData }) {
             if (type === 'DATA_WIDGET') {
                 setSinkConfig('{\n  "layout_style": "card_view",\n  "display_fields": []\n}');
                 setInputConfig('{}');
+            } else if (type === 'LIST') {
+                setSinkConfig('{}');
+                setInputConfig('{}');
+            } else if (type === 'GOOGLE_CALENDAR') {
+                setSinkConfig('{\n  "embedCode": ""\n}');
+                setInputConfig('{}');
             } else {
                 setSinkConfig('{\n  "date_format": "YYYY-MM-DD",\n  "mapping": {\n    "date_key": "event_date",\n    "value_key": "event_description"\n  }\n}');
                 setInputConfig('{\n  "fields": [\n    { "name": "event_date", "type": "date", "label": "Date" },\n    { "name": "event_description", "type": "text", "label": "Description" }\n  ]\n}');
@@ -202,7 +208,7 @@ function AddWidgetForm({ onSubmit, onCancel, initialData }) {
                 sinkConfig: parsedSink,
                 inputConfig: parsedInput,
                 // Layout width preserved if editing, else default
-                layoutWidth: initialData ? initialData.layoutWidth : 2
+                layoutWidth: initialData ? initialData.layoutWidth : (sinkType === 'GOOGLE_CALENDAR' ? 4 : 2)
             });
         } catch (err) {
             alert("Invalid JSON Configuration: " + err.message);
@@ -235,6 +241,7 @@ function AddWidgetForm({ onSubmit, onCancel, initialData }) {
                         <option value="DATA_WIDGET">Data Widget</option>
                         <option value="CALENDAR">Calendar</option>
                         <option value="LIST">List</option>
+                        <option value="GOOGLE_CALENDAR">Google Calendar Embed</option>
                     </select>
                 </div>
             </div>

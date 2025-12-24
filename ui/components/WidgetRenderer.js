@@ -5,6 +5,7 @@ import jp from 'jsonpath';
 import DataWidgetSink from './DataWidgetSink';
 import CalendarWidgetSink from './CalendarWidgetSink';
 import ListWidgetSink from './ListWidgetSink';
+import GoogleCalendarSink from './GoogleCalendarSink';
 
 export default function WidgetRenderer({ widget }) {
     const [data, setData] = useState(null);
@@ -12,6 +13,10 @@ export default function WidgetRenderer({ widget }) {
 
     useEffect(() => {
         const fetchData = async () => {
+            if (widget.sinkType === 'GOOGLE_CALENDAR') {
+                setLoading(false);
+                return;
+            }
             if (widget.sourceType === 'API') {
                 const config = widget.sourceConfig;
                 try {
@@ -120,6 +125,8 @@ export default function WidgetRenderer({ widget }) {
         return <CalendarWidgetSink config={widget.sinkConfig} inputConfig={widget.inputConfig} data={data} widgetId={widget.id} />;
     } else if (widget.sinkType === 'LIST') {
         return <ListWidgetSink config={widget.sinkConfig} data={data} widgetId={widget.id} />;
+    } else if (widget.sinkType === 'GOOGLE_CALENDAR') {
+        return <GoogleCalendarSink config={widget.sinkConfig} />;
     }
 
     return <div style={{ color: '#ef4444', padding: '1rem' }}>Unknown Sink Type: {widget.sinkType}</div>;
